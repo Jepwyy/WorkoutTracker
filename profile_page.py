@@ -3,9 +3,9 @@ from tkinter import messagebox
 from db_connector import connect
 
 class ProfilePage:
-    def __init__(self, user, update_callback):
+    def __init__(self, user, reload_callback):
         self.user = user
-        self.update_callback = update_callback
+        self.reload_callback = reload_callback
 
         self.profile_page = Toplevel()
         self.profile_page.title("Profile")
@@ -78,7 +78,7 @@ class ProfilePage:
         self.profile_page.destroy()
 
         # Call the update callback
-        self.update_callback()
+        self.reload_callback()
 
     def update_labels(self):
         self.name_label.config(text="Name: " + self.user[1])

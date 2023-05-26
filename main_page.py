@@ -4,6 +4,10 @@ from profile_page import ProfilePage
 from db_connector import connect
 from add_exercise_page import AddExercisePage
 from view_exercise_page import ViewExercisePage
+from add_workout_page import AddWorkoutPage
+from add_meal_page import AddMealPage
+from view_workout_history_page import ViewWorkoutHistoryPage
+from view_meal_history_page import ViewMealHistoryPage
 
 class MainPage:
     def __init__(self, name):
@@ -41,24 +45,21 @@ class MainPage:
         view_exercise_button.pack()
 
         # Button for adding workout
-        add_workout_button = Button(self.main_page, text="Add Workout")
+        add_workout_button = Button(self.main_page, text="Add Workout", command=self.add_workout)
         add_workout_button.pack()
 
         # Button for viewing workout history
-        view_workout_history_button = Button(self.main_page, text="View Workout History")
+        view_workout_history_button = Button(self.main_page, text="View Workout History", command=self.view_workout_history)
         view_workout_history_button.pack()
 
         # Button for adding meal
-        add_meal_button = Button(self.main_page, text="Add Meal")
+        add_meal_button = Button(self.main_page, text="Add Meal", command=self.add_meal)
         add_meal_button.pack()
 
         # Button for viewing meal history
-        view_meal_history_button = Button(self.main_page, text="View Meal History")
+        view_meal_history_button = Button(self.main_page, text="View Meal History", command=self.view_meal_history)
         view_meal_history_button.pack()
 
-        # Button for generating total summary reports
-        summary_reports_button = Button(self.main_page, text="Total Summary Reports")
-        summary_reports_button.pack()
 
         # Button for exiting the application
         exit_button = Button(self.main_page, text="Exit", command=self.exit_application)
@@ -76,11 +77,11 @@ class MainPage:
         user = cursor.fetchone()
 
         if user:
-            profile_window = ProfilePage(user, self.update_main_page)
+            profile_window = ProfilePage(user, self.reload_main_page)
         else:
             messagebox.showerror("Error", "User Doesn't Exist")
 
-    def update_main_page(self):
+    def reload_main_page(self):
         self.main_page.destroy()
         self.__init__(self.name)
 
@@ -115,6 +116,18 @@ class MainPage:
     def view_exercise(self):
         user_id = self.get_user_id()
         view_exercise_window = ViewExercisePage(user_id)
+
+    def add_workout(self):
+        add_workout_window = AddWorkoutPage(self.get_user_id(), self)
+
+    def add_meal(self):
+        add_meal_window = AddMealPage(self.get_user_id(), self)
+
+    def view_workout_history(self):
+        view_workout_history_window = ViewWorkoutHistoryPage(self.get_user_id())
+
+    def view_meal_history(self):
+        view_meal_history_window = ViewMealHistoryPage(self.get_user_id())
 
     def get_user_id(self):
         db = connect()
