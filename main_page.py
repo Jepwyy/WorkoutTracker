@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 from profile_page import ProfilePage
 from db_connector import connect
+from add_exercise_page import AddExercisePage
+from view_exercise_page import ViewExercisePage
 
 class MainPage:
     def __init__(self, name):
@@ -31,11 +33,11 @@ class MainPage:
         view_profile_button.pack()
 
         # Button for adding exercise
-        add_exercise_button = Button(self.main_page, text="Add Exercise")
+        add_exercise_button = Button(self.main_page, text="Add Exercise", command=self.add_exercise)
         add_exercise_button.pack()
 
         # Button for viewing exercise
-        view_exercise_button = Button(self.main_page, text="View Exercise")
+        view_exercise_button = Button(self.main_page, text="View Exercise", command=self.view_exercise)
         view_exercise_button.pack()
 
         # Button for adding workout
@@ -84,3 +86,43 @@ class MainPage:
 
     def exit_application(self):
         self.main_page.destroy()
+
+    def add_exercise(self):
+        add_exercise_window = AddExercisePage(self.save_exercise)
+
+    def save_exercise(self, exercise_name, calories_burned):
+        db = connect()
+        cursor = db.cursor()
+        # Create the exercises table if it doesn't exist
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS exercises (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT,
+                exercise_name VARCHAR(255),
+                calories_burned FLOAT,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        """)
+        db.commit()
+        query = "INSERT INTO exercises (user_id, exercise_name, calories_burned) VALUES (%s, %s, %s)"
+        values = (self.get_user_id(), exercise_name, calories_burned)
+
+        cursor.execute(query, values)
+        db.commit()
+
+        messagebox.showinfo("Success", "Exercise added successfully.")
+
+    def view_exercise(self):
+        user_id = self.get_user_id()
+        view_exercise_window = ViewExercisePage(user_id)
+
+    def get_user_id(self):
+        db = connect()
+        cursor = db.cursor()
+        query = "SELECT id FROM users WHERE name = %s"
+        values = (self.name,)
+
+        cursor.execute(query, values)
+        user_id = cursor.fetchone()[0]
+
+        return user_id
