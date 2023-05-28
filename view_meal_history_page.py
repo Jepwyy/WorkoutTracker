@@ -9,6 +9,7 @@ class ViewMealHistoryPage:
 
         self.view_meal_history_window = Toplevel()  # Create the view meal history window
         self.view_meal_history_window.title("Workout Tracker - View Meal History")
+        self.view_meal_history_window.geometry("360x640")  # Set window size
         self.view_meal_history_window.configure(bg="#252525")
         self.view_meal_history_window.resizable(False, False)
         self.view_meal_history_window.update_idletasks()  # Update the window to calculate its size
@@ -39,8 +40,23 @@ class ViewMealHistoryPage:
                              foreground="#ffffff",
                              relief="flat")
 
+        # Create a frame to hold the Treeview and scrollbars
+        self.tree_frame = Frame(self.view_meal_history_window, bg="#252525")
+        self.tree_frame.pack(fill="both", expand=True, pady=5, padx=5)
+
+        # Create a vertical scrollbar
+        self.tree_scrollbar_y = Scrollbar(self.tree_frame)
+        self.tree_scrollbar_y.pack(side=RIGHT, fill=Y)
+
+        # Create a horizontal scrollbar
+        self.tree_scrollbar_x = Scrollbar(self.tree_frame, orient=HORIZONTAL)
+        self.tree_scrollbar_x.pack(side=BOTTOM, fill=X)
+
         self.meal_table = self.create_meal_table()
-        self.meal_table.pack(pady=5, padx=5)
+        self.meal_table.pack(fill="both", expand=True)
+
+        self.tree_scrollbar_y.config(command=self.meal_table.yview)
+        self.tree_scrollbar_x.config(command=self.meal_table.xview)
 
         delete_button = Button(self.view_meal_history_window, text="Delete", command=self.delete_meal)
         delete_button.pack()
@@ -52,11 +68,11 @@ class ViewMealHistoryPage:
             pady=8,
             foreground="#ffffff",
             font=("Open Sans", 8, "bold")
-
         )
 
     def create_meal_table(self):
-        meal_table = ttk.Treeview(self.view_meal_history_window, columns=("Food", "Quantity", "Calories", "Total Calories", "Updated Weight"), style="Custom.Treeview")
+        meal_table = ttk.Treeview(self.tree_frame, columns=("Food", "Quantity", "Calories", "Total Calories", "Updated Weight"), style="Custom.Treeview",
+                                  yscrollcommand=self.tree_scrollbar_y.set, xscrollcommand=self.tree_scrollbar_x.set)
         meal_table.heading("#0", text="ID")
         meal_table.column("#0", width=50)
         meal_table.heading("Food", text="Food")

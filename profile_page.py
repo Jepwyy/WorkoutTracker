@@ -9,7 +9,7 @@ class ProfilePage:
 
         self.profile_page = Toplevel()
         self.profile_page.title("Profile")
-        self.profile_page.geometry("330x500")
+        self.profile_page.geometry("360x640")  # Set window size
         self.profile_page.resizable(False, False)
         self.profile_page.update_idletasks()  # Update the window to calculate its size
         window_width = self.profile_page.winfo_width()
@@ -63,7 +63,7 @@ class ProfilePage:
 
         self.edit_window = Toplevel(self.profile_page)
         self.edit_window.title("Edit Profile")
-        self.edit_window.geometry("330x500")
+        self.edit_window.geometry("360x640")
         self.edit_window.resizable(False, False)
         self.edit_window.update_idletasks()  # Update the window to calculate its size
         window_width = self.edit_window.winfo_width()
@@ -75,7 +75,7 @@ class ProfilePage:
         self.edit_window.geometry(f"+{x_coordinate}+{y_coordinate}")  # Set the window position
 
         # Load the background image
-        self.background_image = ImageTk.PhotoImage(Image.open("img/profilebg.png"))
+        self.background_image = ImageTk.PhotoImage(Image.open("img/profilebg2.png"))
 
         # Create a label to hold the background image
         background_label = Label(self.edit_window, image=self.background_image)

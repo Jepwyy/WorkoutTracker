@@ -10,7 +10,7 @@ class AddWorkoutPage:
 
         self.add_workout_window = Toplevel()
         self.add_workout_window.title("Add Workout")
-        self.add_workout_window.geometry("330x500")
+        self.add_workout_window.geometry("360x640")
         self.add_workout_window.resizable(False, False)
         self.add_workout_window.update_idletasks()  # Update the window to calculate its size
         window_width = self.add_workout_window.winfo_width()

@@ -9,7 +9,7 @@ class AddMealPage:
 
         self.add_meal_window = Toplevel()  # Create the add meal window
         self.add_meal_window.title("Workout Tracker - Add Meal")
-        self.add_meal_window.geometry("330x500")
+        self.add_meal_window.geometry("360x640")
         self.add_meal_window.resizable(False, False)
         self.add_meal_window.update_idletasks()  # Update the window to calculate its size
         window_width = self.add_meal_window.winfo_width()

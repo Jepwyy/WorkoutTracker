@@ -9,6 +9,7 @@ class ViewExercisePage:
 
         self.view_exercise_window = Toplevel()
         self.view_exercise_window.title("View Exercise")
+        self.view_exercise_window.geometry("360x640")  # Set window size
         self.view_exercise_window.configure(bg="#252525")
         self.view_exercise_window.resizable(False, False)
         self.view_exercise_window.update_idletasks()  # Update the window to calculate its size
@@ -38,19 +39,38 @@ class ViewExercisePage:
                              foreground="#ffffff",
                              relief="flat")
 
-        self.exercise_treeview = ttk.Treeview(self.view_exercise_window, style="Custom.Treeview")
-        self.exercise_treeview["columns"] = ("Exercise Name", "Calories Burned")
+        # Create a frame to hold the Treeview and scrollbars
+        self.tree_frame = Frame(self.view_exercise_window, bg="#252525")
+        self.tree_frame.pack(fill="both", expand=True, pady=5, padx=5)
 
+        # Create a vertical scrollbar
+        self.tree_scrollbar_y = Scrollbar(self.tree_frame)
+        self.tree_scrollbar_y.pack(side=RIGHT, fill=Y)
+
+        # Create a horizontal scrollbar
+        self.tree_scrollbar_x = Scrollbar(self.tree_frame, orient=HORIZONTAL)
+        self.tree_scrollbar_x.pack(side=BOTTOM, fill=X)
+
+        self.exercise_treeview = ttk.Treeview(self.tree_frame, style="Custom.Treeview",
+                                              yscrollcommand=self.tree_scrollbar_y.set,
+                                              xscrollcommand=self.tree_scrollbar_x.set)
+        self.exercise_treeview.pack(fill="both", expand=True)
+
+        self.tree_scrollbar_y.config(command=self.exercise_treeview.yview)
+        self.tree_scrollbar_x.config(command=self.exercise_treeview.xview)
+
+        self.exercise_treeview["columns"] = ("Exercise Name", "Calories Burned")
         self.exercise_treeview.heading("Exercise Name", text="Exercise Name")
         self.exercise_treeview.heading("Calories Burned", text="Calories Burned")
-
-        self.exercise_treeview.pack(fill="both", expand=True, pady=5, padx=5)
 
         self.load_exercises()
 
         # Add Edit and Delete buttons
-        self.edit_button = Button(self.view_exercise_window, text="Edit", command=self.edit_exercise)
-        self.edit_button.pack(side=LEFT, padx=(5, 0), pady=10)
+        self.button_frame = Frame(self.view_exercise_window, bg="#252525")
+        self.button_frame.pack(pady=10)
+
+        self.edit_button = Button(self.button_frame, text="Edit", command=self.edit_exercise)
+        self.edit_button.pack(side=LEFT, padx=(5, 0))
         self.edit_button.configure(
             background="#ff6100",
             borderwidth=0,
@@ -59,11 +79,10 @@ class ViewExercisePage:
             pady=8,
             foreground="#ffffff",
             font=("Open Sans", 8, "bold")
-
         )
 
-        self.delete_button = Button(self.view_exercise_window, text="Delete", command=self.delete_exercise)
-        self.delete_button.pack(side=LEFT, padx=(2, 0), pady=10)
+        self.delete_button = Button(self.button_frame, text="Delete", command=self.delete_exercise)
+        self.delete_button.pack(side=LEFT, padx=(2, 0))
         self.delete_button.configure(
             background="#ff6100",
             borderwidth=0,
@@ -72,7 +91,6 @@ class ViewExercisePage:
             pady=8,
             foreground="#ffffff",
             font=("Open Sans", 8, "bold")
-
         )
 
     def load_exercises(self):
@@ -102,7 +120,7 @@ class ViewExercisePage:
             # Open a new edit exercise window
             edit_window = Toplevel(self.view_exercise_window)
             edit_window.title("Edit Exercise")
-            edit_window.geometry("330x500")  # Set the window size
+            edit_window.geometry("360x640")  # Set the window size
             edit_window.update_idletasks()  # Update the window to calculate its size
             window_width = edit_window.winfo_width()
             window_height = edit_window.winfo_height()

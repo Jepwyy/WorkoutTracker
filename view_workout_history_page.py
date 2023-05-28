@@ -10,6 +10,7 @@ class ViewWorkoutHistoryPage:
 
         self.view_workout_history_window = Toplevel()  # Create the view workout history window
         self.view_workout_history_window.title("Workout Tracker - View Workout History")
+        self.view_workout_history_window.geometry("360x640")  # Set window size
         self.view_workout_history_window.configure(bg="#252525")
         self.view_workout_history_window.resizable(False, False)
         self.view_workout_history_window.update()  # Update the window to calculate its size
@@ -31,8 +32,23 @@ class ViewWorkoutHistoryPage:
                              foreground="#ffffff",
                              relief="flat")
 
+        # Create a frame to hold the Treeview and scrollbars
+        self.tree_frame = Frame(self.view_workout_history_window, bg="#252525")
+        self.tree_frame.pack(fill="both", expand=True, pady=5, padx=5)
+
+        # Create a vertical scrollbar
+        self.tree_scrollbar_y = Scrollbar(self.tree_frame)
+        self.tree_scrollbar_y.pack(side=RIGHT, fill=Y)
+
+        # Create a horizontal scrollbar
+        self.tree_scrollbar_x = Scrollbar(self.tree_frame, orient=HORIZONTAL)
+        self.tree_scrollbar_x.pack(side=BOTTOM, fill=X)
+
         self.workout_table = self.create_workout_table()
-        self.workout_table.pack(pady=5, padx=5)
+        self.workout_table.pack(fill="both", expand=True)
+
+        self.tree_scrollbar_y.config(command=self.workout_table.yview)
+        self.tree_scrollbar_x.config(command=self.workout_table.xview)
 
         delete_button = Button(self.view_workout_history_window, text="Delete", command=self.delete_workout)
         delete_button.pack(pady=(0, 5))
@@ -58,7 +74,8 @@ class ViewWorkoutHistoryPage:
         self.view_workout_history_window.geometry(f"+{x_coordinate}+{y_coordinate}")  # Set the window position
 
     def create_workout_table(self):
-        workout_table = ttk.Treeview(self.view_workout_history_window, columns=("Exercise", "Reps", "Sets", "Calories Burned", "Updated Weight", "Date"), style="Custom.Treeview")
+        workout_table = ttk.Treeview(self.tree_frame, columns=("Exercise", "Reps", "Sets", "Calories Burned", "Updated Weight", "Date"), style="Custom.Treeview",
+                                     yscrollcommand=self.tree_scrollbar_y.set, xscrollcommand=self.tree_scrollbar_x.set)
         workout_table.heading("#0", text="ID")
         workout_table.column("#0", width=50)
         workout_table.heading("Exercise", text="Exercise")
