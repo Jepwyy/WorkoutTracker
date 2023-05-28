@@ -9,15 +9,54 @@ class ViewMealHistoryPage:
 
         self.view_meal_history_window = Toplevel()  # Create the view meal history window
         self.view_meal_history_window.title("Workout Tracker - View Meal History")
+        self.view_meal_history_window.configure(bg="#252525")
+        self.view_meal_history_window.resizable(False, False)
+        self.view_meal_history_window.update_idletasks()  # Update the window to calculate its size
+
+        # Move the window positioning code here
+        window_width = self.view_meal_history_window.winfo_width()
+        window_height = self.view_meal_history_window.winfo_height()
+        screen_width = self.view_meal_history_window.winfo_screenwidth()
+        screen_height = self.view_meal_history_window.winfo_screenheight()
+        x_coordinate = int((screen_width - window_width) / 2)
+        y_coordinate = int((screen_height - window_height) / 2)
+        self.view_meal_history_window.geometry(f"+{x_coordinate}+{y_coordinate}")  # Set the window position
+
+        self.style = ttk.Style()
+        self.style.theme_use("default")
+        self.style.configure("Custom.Treeview",
+                             background="#252525",
+                             foreground="#ffffff",
+                             fieldbackground="#252525",
+                             borderwidth=0,
+                             highlightthickness=0)
+        self.style.map("Custom.Treeview",
+                       background=[("selected", "#ff6100")],
+                       foreground=[("selected", "#ffffff")])
+
+        self.style.configure("Custom.Treeview.Heading",
+                             background="#252525",
+                             foreground="#ffffff",
+                             relief="flat")
 
         self.meal_table = self.create_meal_table()
-        self.meal_table.pack()
+        self.meal_table.pack(pady=5, padx=5)
 
         delete_button = Button(self.view_meal_history_window, text="Delete", command=self.delete_meal)
         delete_button.pack()
+        delete_button.configure(
+            background="#ff6100",
+            borderwidth=0,
+            relief="flat",
+            padx=18,
+            pady=8,
+            foreground="#ffffff",
+            font=("Open Sans", 8, "bold")
+
+        )
 
     def create_meal_table(self):
-        meal_table = ttk.Treeview(self.view_meal_history_window, columns=("Food", "Quantity", "Calories", "Total Calories", "Updated Weight"))
+        meal_table = ttk.Treeview(self.view_meal_history_window, columns=("Food", "Quantity", "Calories", "Total Calories", "Updated Weight"), style="Custom.Treeview")
         meal_table.heading("#0", text="ID")
         meal_table.column("#0", width=50)
         meal_table.heading("Food", text="Food")

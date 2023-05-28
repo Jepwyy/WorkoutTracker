@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from db_connector import connect
 from datetime import date
-
+from PIL import ImageTk, Image
 class AddWorkoutPage:
     def __init__(self, user_id, main_page):
         self.user_id = user_id
@@ -10,10 +10,32 @@ class AddWorkoutPage:
 
         self.add_workout_window = Toplevel()
         self.add_workout_window.title("Add Workout")
+        self.add_workout_window.geometry("330x500")
+        self.add_workout_window.resizable(False, False)
+        self.add_workout_window.update_idletasks()  # Update the window to calculate its size
+        window_width = self.add_workout_window.winfo_width()
+        window_height = self.add_workout_window.winfo_height()
+        screen_width = self.add_workout_window.winfo_screenwidth()
+        screen_height = self.add_workout_window.winfo_screenheight()
+        x_coordinate = int((screen_width - window_width) / 2)
+        y_coordinate = int((screen_height - window_height) / 2)
+        self.add_workout_window.geometry(f"+{x_coordinate}+{y_coordinate}")  # Set the window position
+
+        # Load the background image
+        self.background_image = ImageTk.PhotoImage(Image.open("img/addworkoutbg.png"))
+
+        # Create a label to hold the background image
+        background_label = Label(self.add_workout_window, image=self.background_image)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Exercise dropdown
         exercise_label = Label(self.add_workout_window, text="Exercise:")
-        exercise_label.pack()
+        exercise_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
+        exercise_label.pack(pady=(100, 0))
 
         db = connect()
         cursor = db.cursor()
@@ -28,31 +50,68 @@ class AddWorkoutPage:
         selected_exercise.set(exercise_options[0])  # Set default value
 
         exercise_dropdown = OptionMenu(self.add_workout_window, selected_exercise, *exercise_options)
+        exercise_dropdown.configure(
+            bg="#ffffff",
+            font=("Open Sans", 12)
+        )
         exercise_dropdown.pack()
 
         # Reps and Sets
         reps_label = Label(self.add_workout_window, text="Reps:")
+        reps_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
         reps_label.pack()
 
         self.reps_entry = Entry(self.add_workout_window)
         self.reps_entry.pack()
 
         sets_label = Label(self.add_workout_window, text="Sets:")
+        sets_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
         sets_label.pack()
 
         self.sets_entry = Entry(self.add_workout_window)
         self.sets_entry.pack()
 
         self.calories_label = Label(self.add_workout_window, text="")
+        self.calories_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12)
+        )
         self.calories_label.pack()
 
         # Calculate Calories Burned
         calculate_button = Button(self.add_workout_window, text="Calculate", command=lambda: self.calculate_calories(selected_exercise.get(), self.reps_entry.get(), self.sets_entry.get(), exercises))
-        calculate_button.pack()
+        calculate_button.configure(
+            bg="#ff6100",
+            fg="#ffffff",
+            bd=0,
+            relief="flat",
+            pady=10,
+            padx=25,
+            font=("Open Sans", 12, "bold")
+        )
+        calculate_button.pack(pady=5)
 
         # Submit Button
         submit_button = Button(self.add_workout_window, text="Submit", command=lambda: self.submit_workout(selected_exercise.get(), exercises))
-        submit_button.pack()
+        submit_button.configure(
+            bg="#ff6100",
+            fg="#ffffff",
+            bd=0,
+            relief="flat",
+            pady=10,
+            padx=25,
+            font=("Open Sans", 12, "bold")
+        )
+        submit_button.pack(pady=5)
 
     def calculate_calories(self, selected_exercise, reps, sets, exercises):
         # Retrieve the calories_burned for the selected exercise

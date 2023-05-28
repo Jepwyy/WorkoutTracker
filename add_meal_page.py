@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from db_connector import connect
-
+from PIL import ImageTk, Image
 class AddMealPage:
     def __init__(self, user_id, main_page):
         self.user_id = user_id
@@ -9,27 +9,68 @@ class AddMealPage:
 
         self.add_meal_window = Toplevel()  # Create the add meal window
         self.add_meal_window.title("Workout Tracker - Add Meal")
+        self.add_meal_window.geometry("330x500")
+        self.add_meal_window.resizable(False, False)
+        self.add_meal_window.update_idletasks()  # Update the window to calculate its size
+        window_width = self.add_meal_window.winfo_width()
+        window_height = self.add_meal_window.winfo_height()
+        screen_width = self.add_meal_window.winfo_screenwidth()
+        screen_height = self.add_meal_window.winfo_screenheight()
+        x_coordinate = int((screen_width - window_width) / 2)
+        y_coordinate = int((screen_height - window_height) / 2)
+        self.add_meal_window.geometry(f"+{x_coordinate}+{y_coordinate}")  # Set the window position
+
+        # Load the background image
+        self.background_image = ImageTk.PhotoImage(Image.open("img/mealbg.png"))
+
+        # Create a label to hold the background image
+        background_label = Label(self.add_meal_window, image=self.background_image)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         self.food_label = Label(self.add_meal_window, text="Food:")
-        self.food_label.pack()
+        self.food_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
+        self.food_label.pack(pady=(100, 0))
 
         self.food_entry = Entry(self.add_meal_window)
         self.food_entry.pack()
 
         self.quantity_label = Label(self.add_meal_window, text="Quantity:")
+        self.quantity_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
         self.quantity_label.pack()
 
         self.quantity_entry = Entry(self.add_meal_window)
         self.quantity_entry.pack()
 
         self.calories_label = Label(self.add_meal_window, text="Calories:")
+        self.calories_label.configure(
+            bg="#080606",
+            fg="#ffffff",
+            font=("Open Sans", 12, "bold")
+        )
         self.calories_label.pack()
 
         self.calories_entry = Entry(self.add_meal_window)
         self.calories_entry.pack()
 
         submit_button = Button(self.add_meal_window, text="Submit", command=self.submit_meal)
-        submit_button.pack()
+        submit_button.configure(
+            bg="#ff6100",
+            fg="#ffffff",
+            bd=0,
+            relief="flat",
+            pady=10,
+            padx=25,
+            font=("Open Sans", 12, "bold")
+        )
+        submit_button.pack(pady=10)
 
     def submit_meal(self):
         food = self.food_entry.get()
